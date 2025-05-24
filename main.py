@@ -3,10 +3,12 @@ import lib.summarizer
 from clients.facebook.client import Client as FacebookClient
 from clients.x.client import Client as XClient
 from clients.linkedin.client import Client as LinkedinClient
+from clients.telegram.client import Client as TelegramClient
 
 from config import facebook as facebook_config
 from config import x as x_config
 from config import linkedin as linkedin_config
+from config import telegram as telegram_config
 
 def read_history(filename="history.txt"):
     try:
@@ -24,7 +26,8 @@ if __name__ == "__main__":
     # 5. publish on x
     # 6. publish on facebook
     # 7. publish on linkedin
-    # 8. update the history file
+    # 8. publish on telegram
+    # 9. update the history file
      
     article = lib.rss.fetch_latest_article()    
     
@@ -34,17 +37,21 @@ if __name__ == "__main__":
         print(f"Already posted: {article['id']}")
         exit(0)
         
-    message = f"{article['title']}\n\\n{article['link']}"
-    print(message)
-    # fb_client = FacebookClient(facebook_config)
-    # response = fb_client.send("Hello World! Hello AI in Arabic!", link="https://example.com")    
+    message = f"{article['title']}\n\n{article['link']}"    
+    
+    fb_client = FacebookClient(facebook_config)
+    response = fb_client.send(message)    
 
-    # x_client = XClient(x_config)
-    # response = x_client.send("Hello World! Hello AI in Arabic!")    
+    x_client = XClient(x_config)
+    response = x_client.send(message)    
 
     # TODO: LinkedIn client still needs testing as the api key is not generated yet
     # linkedin_client = LinkedinClient(linkedin_config)
     # response = linkedin_client.send("Hello World! Hello AI in Arabic!", link="https://example.com")    
+
+    # Send to Telegram
+    telegram_client = TelegramClient(telegram_config)
+    response = telegram_client.send(message)
 
     # append the id to the history file
     with open("history.txt", "a") as f:

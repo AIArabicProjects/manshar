@@ -12,6 +12,8 @@ class Facebook:
     def __init__(self, data):
         self.access_token = data.get("access_token")
         self.page_id = data.get("page_id")
+        self.app_id = data.get("app_id")
+        self.app_secret = data.get("app_secret")
 
 class LinkedIn:
     def __init__(self, data):
@@ -19,6 +21,11 @@ class LinkedIn:
         self.client_secret = data.get("client_secret")
         self.access_token = data.get("access_token")
         self.organization_id = data.get("organization_id")
+
+class Telegram:
+    def __init__(self, data):
+        self.bot_token = data.get("bot_token")
+        self.chat_id = data.get("chat_id")
 
 class RSS:
     def __init__(self, data):
@@ -37,5 +44,6 @@ with open("config.yaml", "r") as f:
 x = X(_config.get("x", {}))
 facebook = Facebook(_config.get("facebook", {}))
 linkedin = LinkedIn(_config.get("linkedin", {}))
+telegram = Telegram(_config.get("telegram", {}))
 rss = RSS(_config.get("rss", {}))
 app = App(_config.get("app", {}))

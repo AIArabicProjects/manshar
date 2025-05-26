@@ -5,13 +5,17 @@ class Client:
         self.access_token = config.access_token
         self.organization_id = config.organization_id
 
-    def send(self, message, link=None):
+    def send(self, message, link=None, dry_run=False):
         """
         Publish a post to the LinkedIn organization page.
         :param message: The text message to post.
         :param link: (Optional) A URL to include in the post.
+        :param dry_run: (Optional) If True, the post will not be published.
         :return: The response from the LinkedIn API.
         """
+        if dry_run:
+            return {"id": "dry_run"}
+        
         url = "https://api.linkedin.com/v2/ugcPosts"
         headers = {
             "Authorization": f"Bearer {self.access_token}",

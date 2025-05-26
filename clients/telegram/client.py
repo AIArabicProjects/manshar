@@ -25,13 +25,17 @@ class Client:
             parse_mode='HTML'
         )
 
-    def send(self, message, link=None):
+    def send(self, message, link=None, dry_run=False):
         """
         Send a message to the configured Telegram chat.
         :param message: The text message to send
         :param link: (Optional) A URL to include in the message
+        :param dry_run: (Optional) If True, the message will not be sent.
         :return: The response from the Telegram API
         """
+        if dry_run:
+            return {"id": "dry_run"}
+        
         try:
             # Run the async function in an event loop
             loop = asyncio.get_event_loop()

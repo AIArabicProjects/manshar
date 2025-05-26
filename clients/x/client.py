@@ -9,6 +9,9 @@ class Client:
             access_token_secret=config.access_token_secret
         )  
 
-    def send(self, message):
+    def send(self, message, dry_run=False):
+        if dry_run:
+            return {"id": "dry_run"}
+        
         response = self.client.create_tweet(text=message)
         return response

@@ -1,4 +1,5 @@
-# Social Media Queue
+# Manshar - Social Media Publishing Tool
+<img src="./docs/logo.png" alt="Manshar Logo" width="200" height="auto">
 
 A Python application that automatically publishes new blog posts from an RSS feed to various social media platforms (Twitter, Facebook, Telegram, and LinkedIn).
 

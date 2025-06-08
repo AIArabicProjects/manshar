@@ -1,6 +1,7 @@
 import feedparser
 from config import rss as rss_config
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 class ErrInvalidFeedURL(Exception):
     pass
@@ -22,11 +23,50 @@ def fetch_latest_article():
     title = entry.get("title", "")
     link = entry.get("link", "")
     content = entry.get("content", [{}])[0].get("value", "") or entry.get("summary", "")
+    
+    # Extract cover image from HTML content
+    cover_image = None
+    if content:
+        soup = BeautifulSoup(content, 'html.parser')
+        # Try to find the first image in the content
+        img = soup.find('img')
+        if img:
+            # Try to get the full-size image URL first
+            if img.get('srcset'):
+                # Get the largest image from srcset
+                srcset = img['srcset'].split(',')
+                largest_image = srcset[-1].strip().split(' ')[0]
+                cover_image = largest_image
+            # Fall back to src if no srcset
+            elif img.get('src'):
+                cover_image = img.get('src')
+    
+    # If no image found in content, try other methods
+    if not cover_image:
+        # Try to get image from media:content
+        if hasattr(entry, 'media_content'):
+            for media in entry.media_content:
+                if media.get('type', '').startswith('image/'):
+                    cover_image = media.get('url')
+                    break
+        
+        # Try to get image from enclosure
+        if not cover_image and hasattr(entry, 'enclosures'):
+            for enclosure in entry.enclosures:
+                if enclosure.get('type', '').startswith('image/'):
+                    cover_image = enclosure.get('href')
+                    break
+        
+        # Try to get image from image tag
+        if not cover_image and hasattr(entry, 'image'):
+            cover_image = entry.image.get('href')
+    
     return {
         "id": get_slug_from_link(link),
         "title": title, 
         "content": content,
-        "link": link
+        "link": link,
+        "cover_image": cover_image
     }
 
 def get_slug_from_link(link):

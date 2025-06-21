@@ -1,15 +1,18 @@
 import lib.rss
 import lib.summarizer
 import lib.logger
+
 from clients.facebook.client import Client as FacebookClient
 from clients.x.client import Client as XClient
 from clients.linkedin.client import Client as LinkedinClient
 from clients.telegram.client import Client as TelegramClient
+from clients.openai.client import Client as OpenAIClient
 
 from config import facebook as facebook_config
 from config import x as x_config
 from config import linkedin as linkedin_config
 from config import telegram as telegram_config
+from config import openai as openai_config
 
 logger = lib.logger.get_logger(__name__)
 
@@ -24,7 +27,21 @@ def post_to_social_media(article, dry_run=False):
     """
     Post article to all configured social media platforms
     """
-    message = f"{article['title']}\n\n{article['link']}"
+    # Generate engaging message using OpenAI
+    try:
+        openai_client = OpenAIClient(openai_config)
+        ai_result = openai_client.summarize_article(
+            url=article['link'],
+            max_length=500,
+            include_hashtags=True,
+            dry_run=dry_run
+        )
+        message = ai_result['social_post']
+        logger.info(f"Generated AI message: {message}")
+    except Exception as e:
+        logger.warning(f"Failed to generate AI message, using fallback: {str(e)}")
+        # Fallback to simple message format
+        message = f"{article['title']}\n\n{article['link']}"
     
     # Post to Facebook
     try:
@@ -36,8 +53,9 @@ def post_to_social_media(article, dry_run=False):
 
     # Post to X (Twitter)
     try:
+        # Note, twitter does not accept more than 140 chars so we limit the post to only the link and the title with an image
         x_client = XClient(x_config)
-        response = x_client.send(message, image_url=article["cover_image"], dry_run=dry_run)
+        response = x_client.send(f"{article['title']}\n\n{article['link']}", image_url=article["cover_image"], dry_run=dry_run)
         logger.info(f"X post successful: {response}")
     except Exception as e:
         logger.error(f"Failed to post to X: {str(e)}")   
@@ -49,6 +67,24 @@ def post_to_social_media(article, dry_run=False):
         logger.info(f"Telegram post successful: {response}")
     except Exception as e:
         logger.error(f"Failed to post to Telegram: {str(e)}")
+
+def generate_bite_sized_posts(article, num_posts=3, dry_run=False):
+    """
+    Generate bite-sized social media posts from an article for increased engagement
+    """
+    try:
+        openai_client = OpenAIClient(openai_config)
+        posts = openai_client.extract_bite_sized_content(
+            url=article['link'],
+            num_posts=num_posts,
+            post_length=200,
+            dry_run=dry_run
+        )
+        logger.info(f"Generated {len(posts)} bite-sized posts from article")
+        return posts
+    except Exception as e:
+        logger.error(f"Failed to generate bite-sized posts: {str(e)}")
+        return []
 
 def update_history(article_id, filename="history.txt"):
     """
@@ -73,8 +109,8 @@ if __name__ == "__main__":
             logger.info(f"Article already posted: {article['id']}")
             exit(0)
         
-        # Post to social media
-        post_to_social_media(article)
+        # Post to social media with AI-generated content
+        post_to_social_media(article, dry_run=False)
         
         # Update history
         update_history(article["id"])

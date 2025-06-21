@@ -27,6 +27,13 @@ class Telegram:
         self.bot_token = data.get("bot_token")
         self.chat_id = data.get("chat_id")
 
+class OpenAI:
+    def __init__(self, data):
+        self.api_key = data.get("api_key")
+        self.model = data.get("model", "gpt-3.5-turbo")
+        self.max_tokens = data.get("max_tokens", 1000)
+        self.temperature = data.get("temperature", 0.7)
+
 class RSS:
     def __init__(self, data):
         self.feed_url = data.get("feed_url")
@@ -45,5 +52,6 @@ x = X(_config.get("x", {}))
 facebook = Facebook(_config.get("facebook", {}))
 linkedin = LinkedIn(_config.get("linkedin", {}))
 telegram = Telegram(_config.get("telegram", {}))
+openai = OpenAI(_config.get("openai", {}))
 rss = RSS(_config.get("rss", {}))
 app = App(_config.get("app", {}))

@@ -25,6 +25,13 @@ telegram:
   bot_token: your_telegram_bot_token
   chat_id: your_telegram_chat_id
 
+# OpenAI API Configuration
+openai:
+  api_key: your_openai_api_key
+  model: gpt-4o  # Best for Arabic content (alternatives: gpt-4-turbo, gpt-3.5-turbo)
+  max_tokens: 1000
+  temperature: 0.7
+
 # Application Settings
 app:
   check_interval_minutes: 15

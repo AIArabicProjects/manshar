@@ -5,7 +5,7 @@ import sys
 
 FORMATTER = logging.Formatter("%(asctime)s: [%(levelname)s] [%(name)s] %(message)s")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_FILE = BASE_DIR + "/../social_queue.log"
+LOG_FILE = BASE_DIR + "/../manshar.log"
 
 
 def get_console_handler():

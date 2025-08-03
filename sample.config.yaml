@@ -1,6 +1,6 @@
-# RSS Feed Configuration
+# RSS Feed Configuration  
 rss:
-  feed_url: https://your-wordpress-site.com/feed/
+  feed_url: https://aiinarabic.com/feed/
 
 # Twitter API Configuration
 x:
@@ -35,4 +35,16 @@ openai:
 # Application Settings
 app:
   check_interval_minutes: 15
-  log_level: INFO 
+  log_level: INFO
+
+# Daily Content Settings
+daily_content:
+  post_types:
+    - did_you_know
+    - definition
+    - quick_tip
+    - inspiring_quote
+    - amazing_fact
+  max_post_length: 200
+  include_article_link: true
+  posts_per_run: 5  # Number of posts to generate and choose from

@@ -51,3 +51,6 @@ wp-content/cache/
 wp-content/backup-db/
 wp-content/upgrade/
 wp-content/backups/
+
+# Claude Code
+.claude/

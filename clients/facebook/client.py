@@ -21,6 +21,7 @@ class Client:
         
         try:
             post_args = {"message": message}
+            image_uploaded = False
             
             if image_url:
                 try:
@@ -34,18 +35,22 @@ class Client:
                     # Create a temporary file-like object
                     image_data = BytesIO(response.content)
                     
-                    # Upload the image
+                    # Upload the image (unpublished)
                     image = self.graph.put_photo(
                         image=image_data,
                         published=False,
                         message=message
                     )
-                    post_args["attached_media"] = [{"media_fbid": image["id"]}]
+                    # For a single photo, use object_attachment instead of attached_media
+                    if image and "id" in image:
+                        post_args["object_attachment"] = image["id"]
+                        image_uploaded = True
                 except Exception as e:
                     print(f"Error uploading image to Facebook: {str(e)}")
                     # Continue without the image if upload fails
             
-            if link and not image_url:  # Only add link if we're not using an image
+            # Only add link if we're not using an image
+            if link and not image_uploaded:
                 post_args["link"] = link
                 
             return self.graph.put_object(

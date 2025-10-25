@@ -67,24 +67,6 @@ def post_to_social_media(article, dry_run=False):
     except Exception as e:
         logger.error(f"Failed to post to Telegram: {str(e)}")
 
-def generate_bite_sized_posts(article, num_posts=3, dry_run=False):
-    """
-    Generate bite-sized social media posts from an article for increased engagement
-    """
-    try:
-        openai_client = OpenAIClient(openai_config)
-        posts = openai_client.extract_bite_sized_content(
-            url=article['link'],
-            num_posts=num_posts,
-            post_length=200,
-            dry_run=dry_run
-        )
-        logger.info(f"Generated {len(posts)} bite-sized posts from article")
-        return posts
-    except Exception as e:
-        logger.error(f"Failed to generate bite-sized posts: {str(e)}")
-        return []
-
 def update_history(article_id, filename="history.txt"):
     """
     Update the history file with the posted article ID

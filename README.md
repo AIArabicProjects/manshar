@@ -39,6 +39,38 @@ Run the application for regular article posting:
 python main.py
 ```
 
+## Renewing Facebook Access Token
+
+Facebook access tokens expire periodically (typically after 60 days). When your token expires, you'll need to renew it to continue posting to Facebook.
+
+### Running the Token Renewal Script
+
+```bash
+python scripts/renew_fb_token.py
+```
+
+### What the Script Does
+
+The script will:
+- Exchange your current token for a new long-lived token
+- Check if the token is a User or Page token
+- Display the new token and its expiration details
+- Show which Facebook pages are accessible with this token
+
+### Updating Your Configuration
+
+After running the script, you'll see output like:
+```
+✅ New long-lived user token: EAAxxxxxxxxxxxxx...
+✅ Page Access Token: EAAyyyyyyyyyyyyyy...
+```
+
+Copy the appropriate token and update your `config.yaml` file:
+```yaml
+facebook:
+  access_token: YOUR_NEW_TOKEN_HERE
+```
+
 ## Logging
 
 The application logs all activities to the console with timestamps. You can monitor the application's activity and troubleshoot any issues through these logs.

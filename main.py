@@ -36,8 +36,7 @@ def post_to_social_media(article, dry_run=False):
             include_hashtags=True,
             dry_run=dry_run
         )
-        message = ai_result['social_post']
-        logger.info(f"Generated AI message: {message}")
+        message = ai_result['social_post']        
     except Exception as e:
         logger.warning(f"Failed to generate AI message, using fallback: {str(e)}")
         # Fallback to simple message format
@@ -50,7 +49,7 @@ def post_to_social_media(article, dry_run=False):
         logger.info(f"Facebook post successful: {response}")
     except Exception as e:
         logger.error(f"Failed to post to Facebook: {str(e)}")
-
+     
     # Post to X (Twitter)
     try:
         # Note, twitter does not accept more than 140 chars so we limit the post to only the link and the title with an image

@@ -20,9 +20,6 @@ class Client:
             return {"id": "dry_run"}
         
         try:
-            post_args = {"message": message}
-            image_uploaded = False
-            
             if image_url:
                 try:
                     # Download the image with proper headers
@@ -31,28 +28,26 @@ class Client:
                     }
                     response = requests.get(image_url, headers=headers)
                     response.raise_for_status()
-                    
+
                     # Create a temporary file-like object
                     image_data = BytesIO(response.content)
-                    
-                    # Upload the image (unpublished)
-                    image = self.graph.put_photo(
+
+                    # Post the photo directly (published) - simpler and more reliable
+                    return self.graph.put_photo(
                         image=image_data,
-                        published=False,
+                        album_path=f"{self.page_id}/photos",
+                        published=True,
                         message=message
                     )
-                    # For a single photo, use object_attachment instead of attached_media
-                    if image and "id" in image:
-                        post_args["object_attachment"] = image["id"]
-                        image_uploaded = True
                 except Exception as e:
                     print(f"Error uploading image to Facebook: {str(e)}")
                     # Continue without the image if upload fails
-            
-            # Only add link if we're not using an image
-            if link and not image_uploaded:
+
+            # Fallback: post without image (text + link)
+            post_args = {"message": message}
+            if link:
                 post_args["link"] = link
-                
+
             return self.graph.put_object(
                 parent_object=self.page_id,
                 connection_name="feed",

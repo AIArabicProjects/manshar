@@ -3,3 +3,4 @@ arabic-image-captioning-based-on-concept-model-and-vision-encoder-transformer-ar
 gradient-checkpointing
 multimodal_llama
 gradient-accumulation
+introduction-to-qwen2-5-vl

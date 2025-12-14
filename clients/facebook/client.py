@@ -5,7 +5,43 @@ from io import BytesIO
 class Client:
     def __init__(self, config):
         self.page_id = config.page_id
-        self.graph = facebook.GraphAPI(access_token=config.access_token)
+        self.app_id = getattr(config, 'app_id', None)
+        self.app_secret = getattr(config, 'app_secret', None)
+        self.access_token = config.access_token
+
+        # Try to refresh token if credentials are available
+        if self.app_id and self.app_secret:
+            refreshed_token = self._refresh_token()
+            if refreshed_token:
+                self.access_token = refreshed_token
+
+        self.graph = facebook.GraphAPI(access_token=self.access_token)
+
+    def _refresh_token(self):
+        """
+        Exchange current token for a new long-lived token.
+        Returns the new token or None if refresh fails.
+        """
+        try:
+            url = "https://graph.facebook.com/v19.0/oauth/access_token"
+            params = {
+                'grant_type': 'fb_exchange_token',
+                'client_id': self.app_id,
+                'client_secret': self.app_secret,
+                'fb_exchange_token': self.access_token
+            }
+            response = requests.get(url, params=params)
+
+            if response.status_code == 200:
+                data = response.json()
+                new_token = data.get('access_token')
+                if new_token:
+                    print(f"Facebook token refreshed successfully")
+                    return new_token
+            return None
+        except Exception as e:
+            print(f"Failed to refresh Facebook token: {str(e)}")
+            return None
 
     def send(self, message, link=None, image_url=None, dry_run=False):
         """

@@ -13,6 +13,8 @@ x:
 facebook:
   access_token: your_facebook_access_token
   page_id: your_facebook_page_id
+  app_id: your_facebook_app_id          # Required for auto token refresh
+  app_secret: your_facebook_app_secret  # Required for auto token refresh
 
 # LinkedIn API Configuration
 linkedin:

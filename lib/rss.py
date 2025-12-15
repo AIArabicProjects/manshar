@@ -1,8 +1,12 @@
 import feedparser
 import random
+import requests
 from config import rss as rss_config
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+
+# User-Agent to avoid being blocked by some servers
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 
 class ErrInvalidFeedURL(Exception):
     pass
@@ -12,11 +16,15 @@ class ErrEmptyFeed(Exception):
     pass
 
 
-def fetch_latest_article():   
+def fetch_latest_article():
     if not rss_config.feed_url:
         raise ErrInvalidFeedURL("Feed URL is not set")
-    
-    feed = feedparser.parse(rss_config.feed_url)
+
+    # Fetch with User-Agent to avoid being blocked
+    response = requests.get(rss_config.feed_url, headers={'User-Agent': USER_AGENT}, timeout=30)
+    response.raise_for_status()
+
+    feed = feedparser.parse(response.content)
     if not feed.entries:
         raise ErrEmptyFeed("Feed is empty")
     
@@ -73,14 +81,18 @@ def fetch_latest_article():
 def fetch_random_article(exclude_posted=None):
     """
     Fetch a random article from the feed, excluding already posted ones
-    
+
     :param exclude_posted: Set of article IDs to exclude
     :return: Article dictionary or None if no articles found
     """
     if not rss_config.feed_url:
         raise ErrInvalidFeedURL("Feed URL is not set")
-    
-    feed = feedparser.parse(rss_config.feed_url)
+
+    # Fetch with User-Agent to avoid being blocked
+    response = requests.get(rss_config.feed_url, headers={'User-Agent': USER_AGENT}, timeout=30)
+    response.raise_for_status()
+
+    feed = feedparser.parse(response.content)
     if not feed.entries:
         raise ErrEmptyFeed("Feed is empty")
     

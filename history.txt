@@ -4,3 +4,4 @@ gradient-checkpointing
 multimodal_llama
 gradient-accumulation
 introduction-to-qwen2-5-vl
+qwen-quantization

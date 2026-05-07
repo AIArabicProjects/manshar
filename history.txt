@@ -6,3 +6,4 @@ gradient-accumulation
 introduction-to-qwen2-5-vl
 qwen-quantization
 flash-attention
+landmine-detection

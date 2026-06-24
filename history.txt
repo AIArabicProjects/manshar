@@ -8,3 +8,4 @@ qwen-quantization
 flash-attention
 landmine-detection
 claude-models
+chatgpt-prompts

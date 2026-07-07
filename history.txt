@@ -9,3 +9,4 @@ flash-attention
 landmine-detection
 claude-models
 chatgpt-prompts
+qwen-3-5

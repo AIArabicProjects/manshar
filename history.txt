@@ -10,3 +10,4 @@ landmine-detection
 claude-models
 chatgpt-prompts
 qwen-3-5
+healthcare-agent

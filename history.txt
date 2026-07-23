@@ -11,3 +11,4 @@ claude-models
 chatgpt-prompts
 qwen-3-5
 healthcare-agent
+llada2-0-uni

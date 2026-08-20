@@ -15,3 +15,4 @@ llada2-0-uni
 glm-vlm
 deepseek-v3-2
 smart-waste-monitoring-system
+deepseek-v4

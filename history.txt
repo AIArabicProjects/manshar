@@ -17,3 +17,4 @@ deepseek-v3-2
 smart-waste-monitoring-system
 deepseek-v4
 multi-agent-systems-mas
+segment-anything-model-sam

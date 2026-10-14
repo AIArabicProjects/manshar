@@ -21,3 +21,4 @@ segment-anything-model-sam
 early-detection-of-sepsis-using-ml-algorithms
 ai-hallucinations-from-students-perspective
 sam-model-version
+agentic-clinical-information-extraction
